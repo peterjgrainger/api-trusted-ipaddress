@@ -1,0 +1,55 @@
+{
+  "name": "api-trusted-ipaddress",
+  "version": "1.0.0",
+  "description": "An express API that checks if an IP address is trusted by checking if the IP address is in a blacklist of untrusted IP addresses. The API would only be available locally.",
+  "main": "server.js",
+  "scripts": {
+    "test": "jasmine",
+    "lint": "eslint spec",
+    "format": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterjgrainger/api-trusted-ipaddress.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "firehol",
+    "trusted"
+  ],
+  "author": "Peter Grainger (peter@grainger.xyz)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peterjgrainger/api-trusted-ipaddress/issues"
+  },
+  "homepage": "https://github.com/peterjgrainger/api-trusted-ipaddress#readme",
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jasmine": "^2.10.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.1",
+    "jasmine": "^3.4.0",
+    "lint-staged": "^9.2.1",
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
