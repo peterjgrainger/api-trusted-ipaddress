@@ -17,10 +17,14 @@ function untrustedMessage(source) {
 /**
  * Look in redis for the IP address passed in.
  */
-function trustedIpAddressRoute(req, res) {
+function trustedIpAddressRoute(req, res, next) {
   req.redisClient.get(req.params.ipAddress, (error, source) => {
-    const message = source ? untrustedMessage(source) : trustedMessage;
-    res.json(message);
+    if (error) {
+      next(error);
+    } else {
+      const message = source ? untrustedMessage(source) : trustedMessage;
+      res.json(message);
+    }
   });
 }
 

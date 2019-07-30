@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jasmine",
-    "lint": "eslint spec"
+    "lint": "eslint spec",
+    "start": "node src/server"
   },
   "repository": {
     "type": "git",

@@ -16,6 +16,8 @@ describe('src/middleware/redis', () => {
 
   it('creates a client', done => {
     redisMiddleware({}, {}, done);
+    const callback = redisClient.on.calls.allArgs()[0][1];
+    callback();
 
     expect(redisMock.createClient).toHaveBeenCalledWith({
       host: 'localhost',
@@ -33,7 +35,23 @@ describe('src/middleware/redis', () => {
   it('attaches the client to the request', () => {
     const req = {};
     redisMiddleware(req, {}, () => {});
+    const callback = redisClient.on.calls.allArgs()[0][1];
+    callback();
 
     expect(req.redisClient).toBe(redisClient);
+  });
+
+  it('responds with 500 on failure to connect to redis', () => {
+    const error = new Error(
+      'Redis connection to 127.0.0.1:6379 failed - connect ECONNREFUSED 127.0.0.1:6379'
+    );
+
+    const next = jasmine.createSpy('next-mock');
+    redisMiddleware({}, {}, next);
+
+    const callback = redisClient.on.calls.allArgs()[1][1];
+    callback(error);
+
+    expect(next).toHaveBeenCalledWith(error);
   });
 });

@@ -13,7 +13,8 @@ describe('src/routes/trusted-ip', () => {
         ipAddress: '1.1.1.1'
       }
     };
-    res = jasmine.createSpyObj('res-mock', ['json']);
+    res = jasmine.createSpyObj('res-mock', ['json', 'status', 'send']);
+    res.status.and.returnValue(res);
   });
 
   it('Gets the ip address from redis', () => {
@@ -41,5 +42,16 @@ describe('src/routes/trusted-ip', () => {
       trusted: false,
       source: 'source of ip'
     });
+  });
+
+  it("returns 500 if redis can't be accessed", () => {
+    const next = jasmine.createSpy('next-mock');
+    const error = new Error('The connection has already been closed.');
+
+    trustedIpRoute(req, res, next);
+    const callback = redisClient.get.calls.allArgs()[0][1];
+    callback(error);
+
+    expect(next).toHaveBeenCalledWith(error);
   });
 });

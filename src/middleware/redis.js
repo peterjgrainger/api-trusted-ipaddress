@@ -12,9 +12,22 @@ const clientConfiguration = {
  * Attach the redis client to the request to be used by the routes
  */
 function redisMiddleware(req, res, next) {
-  client = client || redis.createClient(clientConfiguration);
-  req.redisClient = client;
-  next();
+  if (client) {
+    req.redisClient = client;
+    next();
+  } else {
+    client = redis.createClient(clientConfiguration);
+
+    client.on('connect', () => {
+      req.redisClient = client;
+      next();
+    });
+
+    client.on('error', error => {
+      client = undefined;
+      next(error);
+    });
+  }
 }
 
 module.exports = redisMiddleware;
