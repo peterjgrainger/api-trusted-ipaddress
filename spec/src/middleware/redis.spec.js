@@ -7,7 +7,7 @@ describe('src/middleware/redis', () => {
 
   beforeEach(() => {
     redisMiddleware = rewire('../../../src/middleware/redis');
-    redisClient = jasmine.createSpyObj('client-mock', ['on', 'get']);
+    redisClient = jasmine.createSpyObj('client-mock', ['on', 'connected']);
     redisMock = jasmine.createSpyObj('redis-mock', ['createClient']);
     redisMock.createClient.and.returnValue(redisClient);
     // eslint-disable-next-line no-underscore-dangle
@@ -27,6 +27,8 @@ describe('src/middleware/redis', () => {
 
   it('reuses client', done => {
     redisMiddleware({}, {}, () => {});
+    redisClient.connected.and.returnValue(true);
+
     redisMiddleware({}, {}, done);
 
     expect(redisMock.createClient).toHaveBeenCalledTimes(1);
